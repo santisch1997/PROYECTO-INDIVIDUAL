@@ -5,30 +5,25 @@ const getTeamsDB = async () => {
   try {
     const driverApi = await axios.get(`http://localhost:5000/drivers/`);
     const allDriver = driverApi.data;
-    const apiTeams = allDriver.map((t) => t.teams);
 
-    let teams = [];
-
-    for (let i = 0; i < apiTeams.length; i++) {
-      if (apiTeams[i]) {
-        const teamSplit = apiTeams[i].split(", ");
-        teams.push(...teamSplit);
-      }
+    if (!Array.isArray(allDriver) || allDriver.length === 0) {
+      throw new Error("La respuesta de la API no es válida");
     }
 
-    teams.sort();
+    const teamsFromApi = allDriver
+      .filter((driver) => driver.teams) // Filtra los conductores que tienen equipos
+      .map((driver) => driver.teams.split(", "))
+      .flat(); // Aplana el array de arrays
 
-    let filteredTeams = [];
+    const uniqueTeams = Array.from(new Set(teamsFromApi)); // Filtra equipos duplicados
 
-    for (let i = 0; i < teams.length; i++) {
-      const found = filteredTeams.find((e) => e.teams === teams[i]);
-      if (!found) filteredTeams.push({ teams: teams[i] });
-    }
+    const formattedTeams = uniqueTeams.map((team) => ({ teams: team }));
 
-    if (filteredTeams.length === 0)
+    if (formattedTeams.length === 0) {
       throw new Error("No hay equipos disponibles");
+    }
 
-    return filteredTeams;
+    return formattedTeams;
   } catch (error) {
     return { error: error.message };
   }
@@ -58,7 +53,7 @@ const saveTeams = async () => {
   }
 };
 
-
 module.exports = {
   saveTeams,
+  getTeamsDB,
 };

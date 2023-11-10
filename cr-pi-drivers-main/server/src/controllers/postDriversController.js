@@ -1,5 +1,4 @@
 const { Driver, Team } = require("../db");
-const axios = require("axios");
 
 const postDriversController = async (
   forename,
@@ -14,10 +13,17 @@ const postDriversController = async (
     if (!forename || !surname || !description || !image || !nationality || !dob)
       throw new Error("Data missing");
 
-    let driverDB = await Driver.findAll();
-    const id = 508 + driverDB.length;
+    // Busca o crea los equipos en la base de datos
+    const teamsInDB = await Promise.all(
+      teams.map(async (teamName) => {
+        return Team.findOrCreate({
+          where: { teams: teamName },
+        });
+      })
+    );
+
+    // Crea el conductor
     const createDriver = await Driver.create({
-      id: id,
       forename,
       surname,
       description,
@@ -26,20 +32,14 @@ const postDriversController = async (
       dob,
     });
 
-    // Busca los equipos en la base de datos utilizando los nombres proporcionados
-    const teamsInDB = await Team.findAll({
-      where: {
-        teams: teams,
-      },
-    });
-
     // Asocia los equipos al conductor
-    await createDriver.setTeams(teamsInDB);
+    await createDriver.addTeams(teamsInDB.map((team) => team[0]));
 
     // Obtiene los equipos asociados al conductor
     const associatedTeams = await createDriver.getTeams();
 
     return {
+      id: createDriver.id,
       forename: createDriver.forename,
       surname: createDriver.surname,
       description: createDriver.description,
@@ -52,7 +52,5 @@ const postDriversController = async (
     return { error: error.message };
   }
 };
-
-
 
 module.exports = { postDriversController };

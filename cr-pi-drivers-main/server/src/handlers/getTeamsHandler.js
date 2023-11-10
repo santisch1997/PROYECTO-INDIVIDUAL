@@ -1,6 +1,6 @@
 const { saveTeams } = require("../controllers/getTeamsController");
 
-const getTeamHandler = async (req, res) => {
+const getTeamsHandler = async (req, res) => {
   try {
     const response = await saveTeams();
     res.status(200).json(response);
@@ -10,5 +10,5 @@ const getTeamHandler = async (req, res) => {
 };
 
 module.exports = {
-  getTeamHandler,
+  getTeamsHandler,
 };

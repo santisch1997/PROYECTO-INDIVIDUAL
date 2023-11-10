@@ -18,6 +18,7 @@ const getDriverDB = async () => {
     //     driver.image = 'URL_DE_LA_IMAGEN_POR_DEFECTO';
     //   }
     // });
+    
 
     return allDriver;
   } catch (error) {
