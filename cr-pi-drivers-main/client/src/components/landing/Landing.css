@@ -1,0 +1,33 @@
+/* src/components/landing/Landing.css */
+.landing-container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .left-section {
+    flex: 3;
+    background: black;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .right-section {
+    flex: 1;
+    background: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Evita que la imagen sobresalga del contenedor */
+  }
+  
+  .landing-image {
+    max-height: 100%;
+    width: auto;
+    height: 100%;
+    object-fit: cover; /* Ajusta la imagen manteniendo la relación de aspecto y cubriendo completamente el contenedor */
+  }
+  
