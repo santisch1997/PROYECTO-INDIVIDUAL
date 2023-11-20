@@ -1,0 +1,33 @@
+header {
+  color: white;
+  background-color:rgb(166, 166, 166);
+  padding: 10px;
+  position: fixed;
+  width: 100%;
+  margin: 0;
+  margin-left: 0;
+  z-index: 1000;
+  top: 0;
+  display: flex;
+  align-items: center; /* Centra verticalmente los elementos hijos */
+}
+
+.banderas-button {
+  width: 80px; /* Ajusta el ancho según sea necesario */
+  height: auto;
+  cursor: pointer;
+  margin-right: 10px; /* Ajusta el margen a la derecha según sea necesario */
+}
+
+.header-title {
+  margin: 0;
+  flex: 1;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8); /* Color blanco con opacidad */
+  margin-right: 100px;
+}
+
+
+
+
+

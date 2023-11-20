@@ -5,7 +5,7 @@
   }
   
   .left-section {
-    flex: 3;
+    flex: 1;
     background: black;
     color: white;
     padding: 20px;
@@ -17,17 +17,55 @@
   
   .right-section {
     flex: 1;
-    background: #f0f0f0;
+    background: #000000;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden; /* Evita que la imagen sobresalga del contenedor */
   }
   
-  .landing-image {
+  h1 {
+    font-size: 3em; /* Tamaño del título principal */
+    margin-bottom: 10px;
+    text-align: center; /* Centra horizontalmente el texto */
+    line-height: 1.2; /* Ajusta la altura de línea para centrar verticalmente */
+    color: #007bff; /* Color del texto */
+    text-shadow: 2px 2px 4px #0056b3; /* Sombras azules */
+    filter: blur(0,1px); /* Difuminado */
+}
+
+h5 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-align: center;
+    line-height: 1.2;
+    color: rgba(255, 255, 255, 0.8); /* Blanco con opacidad */
+}
+
+.btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: rgba(200, 200, 200, 0.2); /* Gris transparente */
+    color: white;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 20px; /* Bordes redondeados */
+    transition: background-color 0.3s, box-shadow 0.3s; /* Agrega transiciones suaves */
+}
+
+.btn:hover {
+    background-color: #007bff; /* Color azul en hover */
+    box-shadow: 0 0 10px 3px #007bff; /* Luz detrás del botón en hover */
+}
+  
+  .btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .ferrari-logo {
+    max-width: 100%;
     max-height: 100%;
     width: auto;
-    height: 100%;
-    object-fit: cover; /* Ajusta la imagen manteniendo la relación de aspecto y cubriendo completamente el contenedor */
+    height: auto;
   }
   

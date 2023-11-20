@@ -1,0 +1,31 @@
+.search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 70px;
+  margin-bottom: 70px;
+}
+
+input[type="text"] {
+  width: 300px; /* Ajusta el ancho según sea necesario */
+  padding: 10px; /* Ajusta el espaciado interno del campo de búsqueda */
+  margin-right: 8px;
+  border-radius: 10px; /* Añade bordes redondeados al campo de búsqueda */
+  border: 1px solid #ccc; /* Añade un borde al campo de búsqueda */
+}
+
+button {
+  padding: 10px 16px; /* Ajusta según sea necesario */
+  border-radius: 10px; /* Añade bordes redondeados al botón */
+  background-color: #989898; /* Añade color de fondo al botón */
+  color: rgb(255, 255, 255);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s; /* Agrega transiciones suaves */
+  
+}
+
+button:hover {
+  background-color: #0056b3; /* Color azul en hover */
+  box-shadow: 0 0 10px 3px #74b6fd; /* Luz detrás del botón en hover */
+}

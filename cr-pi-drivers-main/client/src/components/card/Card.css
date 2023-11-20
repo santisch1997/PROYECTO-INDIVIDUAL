@@ -1,0 +1,27 @@
+.driver-card {
+  border: 1px solid #ddd;
+  padding: 16px;
+  margin: 16px;
+  text-align: center;
+  width: 200px;
+  height: 350px;
+  background-color: rgba(96, 94, 94, 0.9); /* Fondo blanco transparente */
+  border-radius: 10px; /* Bordes redondeados */
+  transition: transform 0.3s ease-in-out; /* Animación de transformación para el efecto de agrandamiento */
+
+  /* Agrega el siguiente estilo para el hover */
+  &:hover {
+    transform: scale(1.05); /* Aumenta ligeramente el tamaño en el hover */
+  }
+}
+
+.driver-card img {
+  width: 70%;
+   height: 150px;
+  object-fit: cover;
+  border-radius: 8px; /* Bordes redondeados para la imagen */
+}
+
+.driver-details {
+  margin-top: 10px;
+}

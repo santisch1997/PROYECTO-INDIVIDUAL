@@ -1,7 +1,8 @@
 // src/components/landing/Landing.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-import landingImage from '../../assets/landing-image.jpg'; // Ruta correcta
+import ferrariLogo from '../../assets/ferrari-png.png';
+import driversPng from '../../assets/drivers-png.png';
 
 import './Landing.css';
 
@@ -16,7 +17,7 @@ const Landing = () => {
         </Link>
       </div>
       <div className="right-section">
-      <img className="landing-image" src="/src/assets/landing-image.jpg" alt="Formula 1" />
+        <img className="ferrari-logo" src={driversPng} alt="Ferrari Logo" />
       </div>
     </div>
   );

@@ -11,13 +11,13 @@ const getDriverDB = async () => {
       attributes: ["id", "forename", "surname", "description", "image", "nationality", "dob"],
     });
 
-    // // Añadir una imagen por defecto si el campo "image" es nulo o vacío
-    // allDriver.forEach((driver) => {
-    //   if (!driver.image) {
-    //     // Reemplaza 'URL_DE_LA_IMAGEN_POR_DEFECTO' con la URL de la imagen por defecto que desees utilizar.
-    //     driver.image = 'URL_DE_LA_IMAGEN_POR_DEFECTO';
-    //   }
-    // });
+    // Añadir una imagen por defecto si el campo "image" es nulo o vacío
+    allDriver.forEach((driver) => {
+      if (!driver.image) {
+        // Reemplaza 'URL_DE_LA_IMAGEN_POR_DEFECTO' con la URL de la imagen por defecto que desees utilizar.
+        driver.image = 'URL_DE_LA_IMAGEN_POR_DEFECTO';
+      }
+    });
     
 
     return allDriver;
@@ -30,8 +30,8 @@ const getDriverDB = async () => {
 const getDriverApi = async () => {
   try {
     const peticion = (
-      await axios(`http://localhost:5000/drivers?limit=15`)
-    ).data.slice(0, 15);
+      await axios(`http://localhost:5000/drivers?limit=45`)
+    ).data.slice(0, 45);
 
     const apiInfoMap = peticion.map((driver) => {
       return {
