@@ -38,6 +38,7 @@ const postDriversController = async (
     // Obtiene los equipos asociados al conductor
     const associatedTeams = await createDriver.getTeams();
 
+    // Devuelve la respuesta con el ID del nuevo conductor
     return {
       id: createDriver.id,
       forename: createDriver.forename,

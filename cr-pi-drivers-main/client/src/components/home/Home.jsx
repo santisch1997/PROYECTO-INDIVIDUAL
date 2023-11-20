@@ -104,7 +104,9 @@ const Home = ({ drivers }) => {
           <label>Team Filter:</label>
           <select value={selectedTeam} onChange={(e) => handleFilterTeam(e.target.value)}>
             <option value="">Todos</option>
-            {Array.from(new Set(drivers.flatMap((driver) => (driver.teams ? driver.teams.split(',') : []))))
+            {Array.from(new Set(drivers.flatMap((driver) => (driver.teams ? (Array.isArray(driver.teams) ? driver.teams : driver.teams.split(',')) : []))))
+
+            
               .filter(Boolean)
               .map((team) => (
                 <option key={team} value={team}>

@@ -35,7 +35,7 @@ const CreateNewDriver = ({ drivers, setDrivers }) => {
   const handleChange = (selectedTeams) => {
     setFormData((prevData) => ({
       ...prevData,
-      teams: selectedTeams.map((team) => team.value),
+      teams: selectedTeams ? selectedTeams.map((team) => team.value) : [],
     }));
   };
 
@@ -51,35 +51,30 @@ const CreateNewDriver = ({ drivers, setDrivers }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formDataForServer = new FormData();
-
-    Object.entries(formData).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        value.forEach((item) => {
-          formDataForServer.append(key, item);
-        });
-      } else {
-        formDataForServer.append(key, value);
-      }
-    });
-
     try {
       const response = await fetch('http://localhost:3001/drivers', {
         method: 'POST',
-        body: formDataForServer,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
 
       const result = await response.json();
       console.log('Respuesta del servidor:', result);
 
-      // Actualizar el estado de los conductores con el nuevo conductor creado
-      setDrivers((prevDrivers) => [...prevDrivers, result]);
-      setSuccessMessage('¡Felicitaciones, creaste tu driver!');
-      setErrorMessage('');
+      if (response.ok) {
+        setDrivers((prevDrivers) => [...prevDrivers, result]);
+        setSuccessMessage('¡Felicitaciones, creaste tu driver!');
+        setErrorMessage('');
+      } else {
+        setSuccessMessage('');
+        setErrorMessage(`Error: ${result.error}`);
+      }
     } catch (error) {
       console.error('Error al enviar el formulario:', error.message);
       setSuccessMessage('');
-      setErrorMessage(`Error, ${error.message}`);
+      setErrorMessage(`Error: ${error.message}`);
     }
   };
 

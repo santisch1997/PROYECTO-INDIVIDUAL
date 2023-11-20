@@ -5,8 +5,7 @@ const postDriversHandler = async (req, res) => {
   try {
     const { forename, surname, description, image, nationality, dob, teams } = req.body;
 
-    // Divide los nombres de los equipos separados por comas en un arreglo
-    const teamNames = teams.split(",").map((teamName) => teamName.trim());
+    const teamNames = Array.isArray(teams) ? teams : [teams];
 
     const response = await postDriversController(
       forename,
@@ -15,7 +14,7 @@ const postDriversHandler = async (req, res) => {
       image,
       nationality,
       dob,
-      teamNames // Pasa el arreglo de nombres de equipos en lugar de la cadena
+      teamNames
     );
 
     return res.status(201).json(response);
