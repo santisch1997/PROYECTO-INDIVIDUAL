@@ -26,7 +26,7 @@ const Home = ({ drivers }) => {
         console.log('Data from server:', data);
 
         if (Array.isArray(data)) {
-          setSearchResults([{ ...formData, id: 'temp-id' }, ...data]);
+          setSearchResults([...data]);
           setNoResults(data.length === 0);
         } else {
           console.error('Error searching drivers:', data);
@@ -136,20 +136,20 @@ const Home = ({ drivers }) => {
       </div>
 
       <div className="driver-cards-container">
-        {noResults ? (
-          <div className="no-results-message">
-            <p>Lo siento, no encontramos ningún driver con ese nombre.</p>
-            <div className="no-results-content">
-              <img src={noResultsImage} alt="No Results" />
-              <button onClick={() => handleSearch('')}>Volver a Home</button>
-            </div>
-          </div>
-        ) : (
-          currentDrivers.map((driver) => (
-            <Card key={driver.id} driver={driver} />
-          ))
-        )}
+  {noResults ? (
+    <div className="no-results-message">
+      <p>Lo siento, no encontramos ningún driver con ese nombre.</p>
+      <div className="no-results-content">
+        <img src={noResultsImage} alt="No Results" />
+        <button onClick={() => handleSearch('')}>Volver a Home</button>
       </div>
+    </div>
+  ) : (
+    currentDrivers.map((driver) => (
+      <Card key={driver.id} driver={driver} />
+    ))
+  )}
+</div>
 
       <Pagination totalDrivers={searchResults.length} driversPerPage={driversPerPage} paginate={paginate} />
     </div>
