@@ -37,7 +37,7 @@ module.exports = (sequelize) => {
       },
       dob: {
         //fecha de nacimiento
-        type: DataTypes.STRING,
+        type: DataTypes.DATE, // Cambiado de STRING a DATE
         allowNull: false,
       },
     },

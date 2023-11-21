@@ -10,10 +10,9 @@ const postDriversController = async (
   teams
 ) => {
   try {
-    if (!forename || !surname || !description || !image || !nationality || !dob)
+    if (!forename || !surname || !description || !image || !nationality || !dob || teams.length === 0)
       throw new Error("Data missing");
 
-    // Busca o crea los equipos en la base de datos
     const teamsInDB = await Promise.all(
       teams.map(async (teamName) => {
         return Team.findOrCreate({
@@ -22,7 +21,6 @@ const postDriversController = async (
       })
     );
 
-    // Crea el conductor
     const createDriver = await Driver.create({
       forename,
       surname,
@@ -32,13 +30,12 @@ const postDriversController = async (
       dob,
     });
 
-    // Asocia los equipos al conductor
+    await createDriver.reload();
+
     await createDriver.addTeams(teamsInDB.map((team) => team[0]));
 
-    // Obtiene los equipos asociados al conductor
     const associatedTeams = await createDriver.getTeams();
 
-    // Devuelve la respuesta con el ID del nuevo conductor
     return {
       id: createDriver.id,
       forename: createDriver.forename,

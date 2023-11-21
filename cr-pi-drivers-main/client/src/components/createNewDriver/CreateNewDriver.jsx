@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Select from 'react-select';
 import './CreateNewDriver.css';
 import { Link } from 'react-router-dom';
 
@@ -32,10 +31,17 @@ const CreateNewDriver = ({ drivers, setDrivers }) => {
     fetchTeamOptions();
   }, []);
 
-  const handleChange = (selectedTeams) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSelect = (event) => {
+    const selectedOptions = Array.from(event.target.selectedOptions);
+    const selectedValues = selectedOptions.map((option) => option.value);
     setFormData((prevData) => ({
       ...prevData,
-      teams: selectedTeams ? selectedTeams.map((team) => team.value) : [],
+      teams: selectedValues,
     }));
   };
 
@@ -50,6 +56,10 @@ const CreateNewDriver = ({ drivers, setDrivers }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Asegurarse de que la fecha esté en el formato correcto (YYYY-MM-DD)
+    const formattedDate = new Date(formData.dob).toISOString().split('T')[0];
+    setFormData((prevData) => ({ ...prevData, dob: formattedDate }));
 
     try {
       const response = await fetch('http://localhost:3001/drivers', {
@@ -139,17 +149,15 @@ const CreateNewDriver = ({ drivers, setDrivers }) => {
             onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
             required
           />
-          <Select
-            isMulti
-            options={teamOptions}
-            onChange={handleChange}
-            styles={{
-              menu: (provided) => ({
-                ...provided,
-                color: 'black', // Cambia el color del texto en el menú desplegable
-              }),
-            }}
-          />
+
+          <label>Teams:</label>
+          <select name="teams" value={formData.teams} onChange={handleSelect} multiple>
+            {teamOptions.map((team) => (
+              <option value={team.value} key={team.value}>
+                {team.label}
+              </option>
+            ))}
+          </select>
 
           <button type="submit" disabled={!isFormValid()}>
             Create

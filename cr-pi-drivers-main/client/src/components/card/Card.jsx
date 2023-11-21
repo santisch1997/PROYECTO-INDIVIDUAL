@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom';
 import './Card.css';
 
 const Card = ({ driver }) => {
+  const key = driver.id ? driver.id : `temp-${new Date().getTime()}`;
+
   return (
-    <Link to={`/driver/${driver.id}`} className="driver-card-link" key={driver.id}>
+    <Link to={`/driver/${driver.id}`} className="driver-card-link" key={key}>
       <div className="driver-card">
         <img src={driver.image} alt={`${driver.forename} ${driver.surname}`} className="driver-image" />
         <h2>{`${driver.forename} ${driver.surname}`}</h2>
