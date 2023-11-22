@@ -15,7 +15,7 @@ const getDriverDB = async () => {
     allDriver.forEach((driver) => {
       if (!driver.image) {
         // Reemplaza 'URL_DE_LA_IMAGEN_POR_DEFECTO' con la URL de la imagen por defecto que desees utilizar.
-        driver.image = 'URL_DE_LA_IMAGEN_POR_DEFECTO';
+        driver.image = 'https://staticg.sportskeeda.com/editor/2022/07/e5e2c-16569446620635-1920.jpg';
       }
     });
     

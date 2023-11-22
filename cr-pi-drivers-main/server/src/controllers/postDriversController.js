@@ -20,8 +20,12 @@ const postDriversController = async (
         });
       })
     );
+    let driverDB = await Driver.findAll();
+
+    const id = 509 + driverDB.length;
 
     const createDriver = await Driver.create({
+      id:id,
       forename,
       surname,
       description,

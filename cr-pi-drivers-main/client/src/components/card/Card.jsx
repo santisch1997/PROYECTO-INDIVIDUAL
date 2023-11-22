@@ -8,7 +8,7 @@ const Card = ({ driver }) => {
 
   return (
     <Link to={`/driver/${driver.id}`} className="driver-card-link" key={key}>
-      <div className="driver-card">
+      <div className="driver-card" key={key}>
         <img src={driver.image} alt={`${driver.forename} ${driver.surname}`} className="driver-image" />
         <h2>{`${driver.forename} ${driver.surname}`}</h2>
 

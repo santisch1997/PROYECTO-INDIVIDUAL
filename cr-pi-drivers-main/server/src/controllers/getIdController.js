@@ -2,7 +2,7 @@ const axios = require("axios");
 const { Driver } = require("../db");
 
 const getIdController = async (id) => {
-  if (isNaN(id)) {
+  if (id > 508) {
     const user = await Driver.findByPk(id);
     return user;
   }

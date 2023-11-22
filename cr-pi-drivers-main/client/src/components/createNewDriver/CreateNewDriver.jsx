@@ -46,11 +46,11 @@ const CreateNewDriver = ({ drivers, setDrivers }) => {
   };
 
   const isFormValid = () => {
-    return Object.values(formData).every((value) => {
+    return Object.entries(formData).every(([key, value]) => {
       if (Array.isArray(value)) {
         return value.length > 0;
       }
-      return value.trim() !== '';
+      return typeof value === 'string' && value.trim() !== '';
     });
   };
 
@@ -59,7 +59,19 @@ const CreateNewDriver = ({ drivers, setDrivers }) => {
 
     // Asegurarse de que la fecha esté en el formato correcto (YYYY-MM-DD)
     const formattedDate = new Date(formData.dob).toISOString().split('T')[0];
-    setFormData((prevData) => ({ ...prevData, dob: formattedDate }));
+
+    // Alinear estructura con DriverDetail
+    const formattedTeams = formData.teams.map((team) => team.label);
+
+    setFormData((prevData) => ({
+      ...prevData,
+      dob: formattedDate,
+      name: {
+        forename: formData.forename,
+        surname: formData.surname,
+      },
+      teams: formattedTeams,
+    }));
 
     try {
       const response = await fetch('http://localhost:3001/drivers', {
