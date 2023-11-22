@@ -51,6 +51,9 @@ const DriverDetail = () => {
   // Divide la cadena de equipos en un array usando la coma como separador
   const teamsArray = driver.teams ? driver.teams.split(',').map((team) => team.trim()) : [];
 
+  // Formatea la fecha para que sea más legible
+  const formattedDate = new Date(driver.dob).toLocaleDateString();
+
   // Muestra la información del conductor
   return (
     <div className="driver-detail-container">
@@ -60,13 +63,22 @@ const DriverDetail = () => {
       </Link>
 
       {/* Muestra la imagen del conductor si está disponible */}
-      {driver.image && (
-        <img
-          src={driver.image.url}
-          alt={fullName}
-          className="driver-detail-image"
-        />
-      )}
+      {driver.image && driver.image.url && (
+       <img
+     src={driver.image.url}
+    alt={fullName}
+    className="driver-detail-image"
+  />
+)}
+
+{/* Muestra la imagen del conductor si está disponible (para drivers creados por ti) */}
+{driver.image && typeof driver.image === 'string' && (
+  <img
+    src={driver.image}
+    alt={fullName}
+    className="driver-detail-image"
+  />
+)}
 
       {/* Muestra el nombre completo del conductor */}
       <h2>{fullName}</h2>
@@ -78,7 +90,7 @@ const DriverDetail = () => {
       <p><strong style={{ color: '#0056b3' }}>Id:</strong> {driver.id}</p>
       <p><strong style={{ color: '#0056b3' }}>Description:</strong> {driver.description || driver.desc}</p>
       <p><strong style={{ color: '#0056b3' }}>Nacionality:</strong> {driver.nationality}</p>
-      <p><strong style={{ color: '#0056b3' }}>Date of Birth:</strong> {driver.dob}</p>
+      <p><strong style={{ color: '#0056b3' }}>Date of Birth:</strong> {formattedDate}</p>
   
       {/* Puedes seguir agregando más detalles según la estructura de tu objeto driver */}
     </div>
