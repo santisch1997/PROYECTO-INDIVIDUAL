@@ -33,12 +33,18 @@ const DriverDetail = () => {
       }
     };
 
+
     // Llama a la función para cargar los detalles del conductor
     fetchDriver();
   }, [driverId]);
 
-  // Imprime el objeto del conductor en la consola para depuración
-  console.log('Driver:', driver);
+  // Efecto para imprimir los mensajes en la consola solo una vez
+  useEffect(() => {
+    // Imprime el objeto del conductor en la consola para depuración
+
+    // Imprime los equipos antes de la renderización
+    console.log('Teams:', driver ? driver.teams : 'No driver data yet');
+  }, []); // Dependencia vacía para ejecutarse solo una vez
 
   // Si no se ha cargado la información del conductor, muestra un mensaje de carga
   if (!driver) {
@@ -49,7 +55,7 @@ const DriverDetail = () => {
   const fullName = `${driver.name?.forename || driver.forename} ${driver.name?.surname || driver.surname}`;
 
   // Divide la cadena de equipos en un array usando la coma como separador
-  const teamsArray = driver.teams ? driver.teams.split(',').map((team) => team.trim()) : [];
+  const teamsArray = Array.isArray(driver.teams) ? driver.teams : [driver.teams];
 
   // Formatea la fecha para que sea más legible
   const formattedDate = new Date(driver.dob).toLocaleDateString();
@@ -64,21 +70,21 @@ const DriverDetail = () => {
 
       {/* Muestra la imagen del conductor si está disponible */}
       {driver.image && driver.image.url && (
-       <img
-     src={driver.image.url}
-    alt={fullName}
-    className="driver-detail-image"
-  />
-)}
+        <img
+          src={driver.image.url}
+          alt={fullName}
+          className="driver-detail-image"
+        />
+      )}
 
-{/* Muestra la imagen del conductor si está disponible (para drivers creados por ti) */}
-{driver.image && typeof driver.image === 'string' && (
-  <img
-    src={driver.image}
-    alt={fullName}
-    className="driver-detail-image"
-  />
-)}
+      {/* Muestra la imagen del conductor si está disponible (para drivers creados por ti) */}
+      {driver.image && typeof driver.image === 'string' && (
+        <img
+          src={driver.image}
+          alt={fullName}
+          className="driver-detail-image"
+        />
+      )}
 
       {/* Muestra el nombre completo del conductor */}
       <h2>{fullName}</h2>

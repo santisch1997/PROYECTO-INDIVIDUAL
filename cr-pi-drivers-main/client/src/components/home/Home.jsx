@@ -91,24 +91,25 @@ const Home = ({ drivers }) => {
     setSelectedDobOrder(order);
   };
 
+
   const handleOriginFilter = async (origin) => {
     try {
       let filteredResults;
-
+  
       if (origin === 'Api') {
         const response = await fetch('http://localhost:3001/drivers');
         const data = await response.json();
-        filteredResults = data;
+        // Filtrar conductores con ID hasta 508
+        filteredResults = data.filter(driver => driver.id <= 508);
       } else if (origin === 'Data Base') {
-        // Agrega lógica para obtener los conductores de la base de datos si es necesario
-        // Por ejemplo, podrías tener una ruta en tu servidor que devuelve los conductores de la base de datos
-        // const response = await fetch('ruta para obtener conductores de la base de datos');
-        // const data = await response.json();
-        // filteredResults = data;
+        const response = await fetch('http://localhost:3001/drivers');
+        const data = await response.json();
+        // Filtrar conductores con ID mayor a 508
+        filteredResults = data.filter(driver => driver.id > 508);
       } else {
         filteredResults = originalResults;
       }
-
+  
       setSearchResults(filteredResults);
       setSelectedOrigin(origin);
     } catch (error) {

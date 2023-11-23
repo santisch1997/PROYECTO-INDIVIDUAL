@@ -1,7 +1,8 @@
 .create-driver-container {
+  margin: 10px auto;
+  padding: 15px;
   max-width: 400px;
-  margin: 20px auto; /* Ajusta el margen superior según tus necesidades */
-  padding: 20px;
+  
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #777777;
@@ -19,7 +20,8 @@ input[name="nationality"] {
 form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px; /* Reducir el espacio entre elementos */
+
 }
 
 label {
@@ -92,3 +94,29 @@ button:disabled {
   background-color: #0056b3;
 }
 
+.centered-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #4caf50;
+  color: white;
+  text-align: center;
+  display: flex;
+  align-items: center;
+}
+
+.close-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 16px;
+  color: black; /* Color de la cruz */
+  cursor: pointer;
+  
+}

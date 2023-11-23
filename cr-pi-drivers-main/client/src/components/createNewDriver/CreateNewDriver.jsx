@@ -3,7 +3,7 @@ import './CreateNewDriver.css';
 import { Link } from 'react-router-dom';
 
 const CreateNewDriver = ({ drivers, setDrivers }) => {
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     forename: '',
     surname: '',
     description: '',
@@ -11,11 +11,14 @@ const CreateNewDriver = ({ drivers, setDrivers }) => {
     nationality: '',
     dob: '',
     teams: [],
-  });
+  };
 
+  const [formData, setFormData] = useState(initialFormData);
   const [teamOptions, setTeamOptions] = useState([]);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const fetchTeamOptions = async () => {
@@ -31,9 +34,37 @@ const CreateNewDriver = ({ drivers, setDrivers }) => {
     fetchTeamOptions();
   }, []);
 
+  const resetForm = () => {
+    setFormData(initialFormData);
+    setErrors({});
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+    validateField(name, value);
+  };
+
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'forename':
+      case 'surname':
+        if (!/^[a-zA-Z ]+$/.test(value)) {
+          setErrors((prevErrors) => ({ ...prevErrors, [name]: 'Solo se permiten letras y espacios.' }));
+        } else {
+          setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+        }
+        break;
+      case 'description':
+        if (value.length > 100) {
+          setErrors((prevErrors) => ({ ...prevErrors, [name]: 'La descripción no puede tener más de 100 caracteres.' }));
+        } else {
+          setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+        }
+        break;
+      default:
+        break;
+    }
   };
 
   const handleSelect = (event) => {
@@ -46,23 +77,34 @@ const CreateNewDriver = ({ drivers, setDrivers }) => {
   };
 
   const isFormValid = () => {
-    return Object.entries(formData).every(([key, value]) => {
-      if (Array.isArray(value)) {
-        return value.length > 0;
-      }
-      return typeof value === 'string' && value.trim() !== '';
-    });
+    return (
+      Object.entries(formData).every(([key, value]) => {
+        if (Array.isArray(value)) {
+          return value.length > 0;
+        }
+        return typeof value === 'string' && value.trim() !== '';
+      }) &&
+      Object.values(errors).every((error) => !error)
+    );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validar una vez más antes de enviar el formulario
+    Object.keys(formData).forEach((key) => validateField(key, formData[key]));
+
+    if (!isFormValid()) {
+      return;
+    }
+
     // Asegurarse de que la fecha esté en el formato correcto (YYYY-MM-DD)
     const formattedDate = new Date(formData.dob).toISOString().split('T')[0];
 
     // Alinear estructura con DriverDetail
-    const formattedTeams = formData.teams.map((team) => team.label);
+    const formattedTeams = formData.teams.map((team) => (team && team.label ? team.label : team)).filter(Boolean);
 
+    // Actualiza el estado de formData
     setFormData((prevData) => ({
       ...prevData,
       dob: formattedDate,
@@ -72,6 +114,9 @@ const CreateNewDriver = ({ drivers, setDrivers }) => {
       },
       teams: formattedTeams,
     }));
+
+    // Espera a que se complete la actualización del estado
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     try {
       const response = await fetch('http://localhost:3001/drivers', {
@@ -83,21 +128,27 @@ const CreateNewDriver = ({ drivers, setDrivers }) => {
       });
 
       const result = await response.json();
-      console.log('Respuesta del servidor:', result);
 
       if (response.ok) {
         setDrivers((prevDrivers) => [...prevDrivers, result]);
         setSuccessMessage('¡Felicitaciones, creaste tu driver!');
         setErrorMessage('');
+        setShowSuccessMessage(true);
+        resetForm(); // Restablecer el formulario después de un envío exitoso
       } else {
-        setSuccessMessage('');
+        setShowSuccessMessage(false);
         setErrorMessage(`Error: ${result.error}`);
       }
     } catch (error) {
       console.error('Error al enviar el formulario:', error.message);
-      setSuccessMessage('');
+      setShowSuccessMessage(false);
       setErrorMessage(`Error: ${error.message}`);
     }
+  };
+
+  const closeSuccessMessage = () => {
+    setShowSuccessMessage(false);
+    resetForm(); // Restablecer el formulario al cerrar el mensaje de éxito
   };
 
   return (
@@ -113,27 +164,30 @@ const CreateNewDriver = ({ drivers, setDrivers }) => {
             type="text"
             name="forename"
             value={formData.forename}
-            onChange={(e) => setFormData({ ...formData, forename: e.target.value })}
+            onChange={handleChange}
             required
           />
+          {errors.forename && <p className="error-message">{errors.forename}</p>}
 
           <label>Surname:</label>
           <input
             type="text"
             name="surname"
             value={formData.surname}
-            onChange={(e) => setFormData({ ...formData, surname: e.target.value })}
+            onChange={handleChange}
             required
           />
+          {errors.surname && <p className="error-message">{errors.surname}</p>}
 
           <label>Description:</label>
           <input
             type="text"
             name="description"
             value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            onChange={handleChange}
             required
           />
+          {errors.description && <p className="error-message">{errors.description}</p>}
 
           <label>Image:</label>
           <input
@@ -175,7 +229,15 @@ const CreateNewDriver = ({ drivers, setDrivers }) => {
             Create
           </button>
 
-          {successMessage && <p className="success-message">{successMessage}</p>}
+          {showSuccessMessage && (
+            <div className="centered-message">
+              <p>{successMessage}</p>
+              <button onClick={closeSuccessMessage} className="close-button">
+               &#10006; {/* Unicode para la cruz */}
+               </button>
+            </div>
+          )}
+
           {errorMessage && <p className="error-message">{errorMessage}</p>}
         </form>
       </div>
