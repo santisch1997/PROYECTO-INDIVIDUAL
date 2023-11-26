@@ -60,6 +60,7 @@ h1 {
 
 .create-driver-button-container {
   text-align: center;
+  
 }
 
 .create-driver-button {
@@ -73,4 +74,23 @@ h1 {
   transition: background-color 0.3s, box-shadow 0.3s;
   display: inline-block; /* Cambiado a inline-block */
   margin-bottom: 50px;
+}
+
+.reset-filters-button-container {
+  text-align: center;
+  margin-top: 10px;
+  display: flex;
+  justify-content:center;
+ text-align: center;
+  margin-top: 10px;
+
+}
+
+.reset-filters-button {
+  background: none;
+  border: none;
+  color: red;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 30%;
 }

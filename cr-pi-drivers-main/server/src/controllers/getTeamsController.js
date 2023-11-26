@@ -11,9 +11,9 @@ const getTeamsDB = async () => {
     }
 
     const teamsFromApi = allDriver
-      .filter((driver) => driver.teams) // Filtra los conductores que tienen equipos
+      .filter((driver) => driver.teams) 
       .map((driver) => driver.teams.split(", "))
-      .flat(); // Aplana el array de arrays
+      .flat(); 
 
     const uniqueTeams = Array.from(new Set(teamsFromApi)); // Filtra equipos duplicados
 
@@ -38,7 +38,7 @@ const saveTeams = async () => {
 
       if (!allTeams) throw new Error("No hay equipos");
 
-      // Verificar y filtrar equipos duplicados
+      
       const uniqueTeams = allTeams.filter(
         (team) => !dbTeams.some((dbTeam) => dbTeam.name === team.teams)
       );

@@ -1,7 +1,6 @@
 const axios = require("axios");
 const { Driver, Team } = require("../db");
 
-// Define la relación entre Driver y Team si no lo has hecho ya
 Driver.belongsToMany(Team, { through: 'DriverTeams' });
 
 const getDriverDB = async () => {
@@ -14,7 +13,6 @@ const getDriverDB = async () => {
     // Añadir una imagen por defecto si el campo "image" es nulo o vacío
     allDriver.forEach((driver) => {
       if (!driver.image) {
-        // Reemplaza 'URL_DE_LA_IMAGEN_POR_DEFECTO' con la URL de la imagen por defecto que desees utilizar.
         driver.image = 'https://staticg.sportskeeda.com/editor/2022/07/e5e2c-16569446620635-1920.jpg';
       }
     });

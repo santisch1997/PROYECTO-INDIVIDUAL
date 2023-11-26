@@ -1,7 +1,6 @@
 const { DataTypes } = require("sequelize");
 
-// Exportamos una funcion que define el modelo
-// Luego le injectamos la conexion a sequelize.
+
 module.exports = (sequelize) => {
   // defino el modelo
   sequelize.define(
@@ -37,7 +36,7 @@ module.exports = (sequelize) => {
       },
       dob: {
         //fecha de nacimiento
-        type: DataTypes.DATE, // Cambiado de STRING a DATE
+        type: DataTypes.DATE, 
         allowNull: false,
       },
     },

@@ -98,13 +98,10 @@ const CreateNewDriver = ({ drivers, setDrivers }) => {
       return;
     }
 
-    // Asegurarse de que la fecha esté en el formato correcto (YYYY-MM-DD)
     const formattedDate = new Date(formData.dob).toISOString().split('T')[0];
 
-    // Alinear estructura con DriverDetail
     const formattedTeams = formData.teams.map((team) => (team && team.label ? team.label : team)).filter(Boolean);
 
-    // Actualiza el estado de formData
     setFormData((prevData) => ({
       ...prevData,
       dob: formattedDate,
@@ -115,7 +112,6 @@ const CreateNewDriver = ({ drivers, setDrivers }) => {
       teams: formattedTeams,
     }));
 
-    // Espera a que se complete la actualización del estado
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     try {
@@ -134,7 +130,7 @@ const CreateNewDriver = ({ drivers, setDrivers }) => {
         setSuccessMessage('¡Felicitaciones, creaste tu driver!');
         setErrorMessage('');
         setShowSuccessMessage(true);
-        resetForm(); // Restablecer el formulario después de un envío exitoso
+        resetForm(); 
       } else {
         setShowSuccessMessage(false);
         setErrorMessage(`Error: ${result.error}`);
@@ -148,14 +144,14 @@ const CreateNewDriver = ({ drivers, setDrivers }) => {
 
   const closeSuccessMessage = () => {
     setShowSuccessMessage(false);
-    resetForm(); // Restablecer el formulario al cerrar el mensaje de éxito
+    resetForm(); 
   };
 
   return (
     <div>
-      <Link to="/main" className="back-button">
-        Volver
-      </Link>
+      <Link to="/main" className="back-button1 custom-back-button">
+      Volver
+     </Link>
       <div className="create-driver-container">
         <h2>Create new Driver!</h2>
         <form onSubmit={handleSubmit}>

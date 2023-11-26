@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../header/Header';
 import SearchBar from '../searchbar/SearchBar';
 import Card from '../card/Card';
@@ -8,6 +9,8 @@ import noResultsImage from './no-results-icon.png';
 import { Link } from 'react-router-dom';
 
 const Home = ({ drivers }) => {
+const navigate = useNavigate();
+
   const [searchTerm, setSearchTerm] = useState('');
   const [originalResults, setOriginalResults] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
@@ -22,6 +25,13 @@ const Home = ({ drivers }) => {
   useEffect(() => {
     setOriginalResults(drivers);
     setSearchResults(drivers);
+
+    // Recuperar filtros desde el historial del navegador o contexto global
+    const storedFilters = JSON.parse(localStorage.getItem('driverFilters')) || {};
+    setSelectedTeam(storedFilters.selectedTeam || '');
+    setSelectedAlphabeticOrder(storedFilters.selectedAlphabeticOrder || '');
+    setSelectedDobOrder(storedFilters.selectedDobOrder || '');
+    setSelectedOrigin(storedFilters.selectedOrigin || '');
   }, [drivers]);
 
   const handleSearch = async (term) => {
@@ -59,43 +69,72 @@ const Home = ({ drivers }) => {
 
     setSearchResults(filteredResults);
     setSelectedTeam(team);
+
+    // Almacenar filtros en el historial del navegador o contexto global
+    const filtersToStore = { ...localStorage.getItem('driverFilters'), selectedTeam: team };
+    localStorage.setItem('driverFilters', JSON.stringify(filtersToStore));
   };
 
   const handleAlphabeticOrder = (order) => {
     let sortedResults;
 
     if (order === 'asc') {
-      sortedResults = [...searchResults].sort((a, b) => a.forename.localeCompare(b.forename));
+      sortedResults = [...searchResults].sort((a, b) => a.forename.localeCompare(b.forename, 'en', { sensitivity: 'base' }));
     } else if (order === 'desc') {
-      sortedResults = [...searchResults].sort((a, b) => b.forename.localeCompare(a.forename));
+      sortedResults = [...searchResults].sort((a, b) => b.forename.localeCompare(a.forename, 'en', { sensitivity: 'base' }));
     } else {
       sortedResults = originalResults;
     }
 
+    console.log("Drivers ordenados:", sortedResults);
+
     setSearchResults(sortedResults);
     setSelectedAlphabeticOrder(order);
+
+    // Almacenar filtros en el historial del navegador o contexto global
+    const filtersToStore = { ...localStorage.getItem('driverFilters'), selectedAlphabeticOrder: order };
+    localStorage.setItem('driverFilters', JSON.stringify(filtersToStore));
   };
 
   const handleDobOrder = (order) => {
     let sortedResults;
-
-    if (order === 'asc') {
-      sortedResults = [...searchResults].sort((a, b) => a.dob.localeCompare(b.dob));
-    } else if (order === 'desc') {
-      sortedResults = [...searchResults].sort((a, b) => b.dob.localeCompare(a.dob));
+  
+    if (selectedTeam) {
+      // Si se ha seleccionado un equipo, aplicar el filtro de equipo antes de ordenar por fecha de nacimiento
+      const teamResults = searchResults.filter((driver) => driver.teams && driver.teams.includes(selectedTeam));
+  
+      if (order === 'asc') {
+        sortedResults = [...teamResults].sort((a, b) => a.dob.localeCompare(b.dob));
+      } else if (order === 'desc') {
+        sortedResults = [...teamResults].sort((a, b) => b.dob.localeCompare(a.dob));
+      } else {
+        sortedResults = teamResults;
+      }
     } else {
-      sortedResults = originalResults;
+      // Si no se ha seleccionado un equipo, ordenar todos los resultados por fecha de nacimiento
+      if (order === 'asc') {
+        sortedResults = [...searchResults].sort((a, b) => a.dob.localeCompare(b.dob));
+      } else if (order === 'desc') {
+        sortedResults = [...searchResults].sort((a, b) => b.dob.localeCompare(a.dob));
+      } else {
+        sortedResults = searchResults;
+      }
     }
-
+  
     setSearchResults(sortedResults);
+    
+    // Actualizar el estado de selectedDobOrder
     setSelectedDobOrder(order);
+  
+    // Almacenar filtros en el historial del navegador o contexto global
+    const filtersToStore = { ...localStorage.getItem('driverFilters'), selectedDobOrder: order };
+    localStorage.setItem('driverFilters', JSON.stringify(filtersToStore));
   };
-
 
   const handleOriginFilter = async (origin) => {
     try {
       let filteredResults;
-  
+
       if (origin === 'Api') {
         const response = await fetch('http://localhost:3001/drivers');
         const data = await response.json();
@@ -109,29 +148,45 @@ const Home = ({ drivers }) => {
       } else {
         filteredResults = originalResults;
       }
-  
+
       setSearchResults(filteredResults);
       setSelectedOrigin(origin);
+
+      // Almacenar filtros en el historial del navegador o contexto global
+      const filtersToStore = { ...localStorage.getItem('driverFilters'), selectedOrigin: origin };
+      localStorage.setItem('driverFilters', JSON.stringify(filtersToStore));
     } catch (error) {
       console.error('Error filtering drivers by origin:', error.message);
     }
   };
 
+  const handleResetFilters = () => {
+    // Limpiar filtros y restaurar resultados originales
+    setSearchResults(originalResults);
+    setSelectedTeam('');
+    setSelectedAlphabeticOrder('');
+    setSelectedDobOrder('');
+    setSelectedOrigin('');
+
+    // Limpiar filtros almacenados en el historial del navegador o contexto global
+    localStorage.removeItem('driverFilters');
+  };
+
   const indexOfLastDriver = currentPage * driversPerPage;
   const indexOfFirstDriver = indexOfLastDriver - driversPerPage;
-  const currentDrivers = (searchResults || []).slice(indexOfFirstDriver, indexOfLastDriver).reverse();
+  const currentDrivers = (searchResults || []).slice(indexOfFirstDriver, indexOfLastDriver);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="home-container">
       <Header onSearch={handleSearch} />
-      <SearchBar onSearch={handleSearch} searchTerm={searchTerm} />
+      <SearchBar onSearch={handleSearch} searchTerm={searchTerm}/>
 
       <div className="create-driver-button-container">
-       <Link to="/create-driver" className="create-driver-button">
-        Create Driver
-       </Link>
+        <Link to="/create-driver" className="create-driver-button">
+          Create Driver
+        </Link>
       </div>
 
       <div className="dropdown-container">
@@ -175,6 +230,10 @@ const Home = ({ drivers }) => {
             <option value="Data Base">Data Base</option>
           </select>
         </div>
+      </div>
+
+      <div className="reset-filters-button-container">
+        <button onClick={handleResetFilters}>Reset Filters</button>
       </div>
 
       <div className="driver-cards-container">

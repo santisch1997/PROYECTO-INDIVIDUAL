@@ -5,7 +5,6 @@ import banderasImg from './banderas.png'; // Importa la imagen
 
 const Header = ({ onSearch }) => {
   const handleGoHome = () => {
-    // Limpiar la búsqueda y volver a la página principal
     onSearch('');
   };
 

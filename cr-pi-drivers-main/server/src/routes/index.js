@@ -6,6 +6,9 @@ const router = Router();
 
 router.use("/drivers", driversRouters);
 router.use("/teams", teamsRouters);
+router.use("/", teamsRouters);
+
+
 
 
 

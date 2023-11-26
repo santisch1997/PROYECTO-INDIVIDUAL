@@ -78,8 +78,11 @@ button:disabled {
   color: white;
 }
 
-.back-button {
-  margin-top: 10px !important; /* Puedes ajustar el valor según tus preferencias */
+.back-button1 {
+  position: relative; /* Cambiamos a posición relativa */
+  top: 20px; /* Ajusta la distancia desde la parte superior según tus necesidades */
+  left: 20px; /* Ajusta la distancia desde la izquierda según tus necesidades */
+
   padding: 8px 12px;
   border-radius: 5px;
   background-color: #007BFF;
@@ -90,8 +93,8 @@ button:disabled {
   transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.back-button:hover {
-  background-color: #0056b3;
+.back-button1:hover {
+  background-color: #0056b3 !important;
 }
 
 .centered-message {
